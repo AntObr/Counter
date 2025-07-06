@@ -4,9 +4,7 @@ import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Settings = {
-    theme: 'light' | 'dark';
-    notifications: boolean;
-    soundEnabled: boolean;
+    startingPoints: number;
 };
 
 type SettingsContextType = {
@@ -18,9 +16,7 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
     const [settings, setSettings] = useState<Settings>({
-        theme: 'light',
-        notifications: true,
-        soundEnabled: false,
+        startingPoints: 30,
     });
 
     const updateSettings = (newSettings: Partial<Settings>) => {
@@ -59,9 +55,7 @@ export default function SettingsScreen() {
     return (
         <View style={styles.container}>
             <Text>Settings</Text>
-            <Text>Theme: {settings.theme}</Text>
-            <Text>Notifications: {settings.notifications ? 'Enabled' : 'Disabled'}</Text>
-            <Text>Sound: {settings.soundEnabled ? 'Enabled' : 'Disabled'}</Text>
+            <Text>Starting Points: {settings.startingPoints}</Text>
             <Button title="Home" onPress={() => router.push('/')} />
         </View>
     );
