@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, ScrollView, Button } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Redirect, router } from 'expo-router';
+import Counter from '../components/Counter';
 
 export default function App() {
     const insets = useSafeAreaInsets();
@@ -19,8 +20,9 @@ export default function App() {
 
     return (
         <ScrollView style={styles.container}>
-            <Text>Home</Text>
             <Button title="Settings" onPress={() => router.push('/settings')} />
+            <Counter />
+            <Counter />
             <StatusBar style="auto" />
         </ScrollView>
     );

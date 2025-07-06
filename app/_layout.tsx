@@ -7,8 +7,8 @@ export default function AppWrapper() {
         <SettingsProvider>
             <SafeAreaProvider>
                 <Stack>
-                    <Stack.Screen name="index" options={{ headerShown: false }} />
-                    <Stack.Screen name="settings" options={{ headerShown: false }} />
+                    <Stack.Screen name="index" options={{ title: 'Home', headerShown: false }} />
+                    <Stack.Screen name="settings" options={{ title: 'Settings', headerShown: true }} />
                 </Stack>
             </SafeAreaProvider>
         </SettingsProvider>
