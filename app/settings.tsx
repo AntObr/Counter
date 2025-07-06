@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useState } from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Switch } from 'react-native';
 
 type Settings = {
     startingPoints: number;
+    onePlayer: boolean;
 };
 
 type SettingsContextType = {
@@ -15,6 +16,7 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
     const [settings, setSettings] = useState<Settings>({
         startingPoints: 30,
+        onePlayer: false,
     });
 
     const updateSettings = (newSettings: Partial<Settings>) => {
@@ -50,6 +52,13 @@ export default function SettingsScreen() {
                     onChangeText={text => updateSettings({ startingPoints: parseInt(text) || 0 })}
                 />
             </View>
+            <View style={styles.settingsContainer}>
+                <Text style={styles.settingsText}>One Player</Text>
+                <Switch
+                    value={settings.onePlayer}
+                    onValueChange={value => updateSettings({ onePlayer: value })}
+                />
+            </View>
         </View>
     );
 }
@@ -61,6 +70,7 @@ const styles = StyleSheet.create({
         paddingTop: '5%',
         paddingLeft: '5%',
         paddingRight: '5%',
+        gap: 10,
     },
     settingsContainer: {
         flexDirection: 'row',

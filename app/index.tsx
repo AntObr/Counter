@@ -5,9 +5,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import Counter from '../components/Counter';
 import FloatingButton from '../components/FloatingButton';
+import { useSettings } from './settings';
 
 export default function App() {
     const insets = useSafeAreaInsets();
+    const { settings } = useSettings();
 
     const styles = StyleSheet.create({
         container: {
@@ -23,7 +25,7 @@ export default function App() {
 
     return (
         <View style={styles.container}>
-            <Counter />
+            {!settings.onePlayer && <Counter />}
             <Counter />
             <FloatingButton
                 onPress={() => router.push('/settings')}
