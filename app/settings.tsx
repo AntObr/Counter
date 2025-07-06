@@ -1,7 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { View, Text, Button, StyleSheet, TextInput } from 'react-native';
-import { router } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, StyleSheet, TextInput } from 'react-native';
 
 type Settings = {
     startingPoints: number;
@@ -39,44 +37,10 @@ export function useSettings() {
 }
 
 export default function SettingsScreen() {
-    const insets = useSafeAreaInsets();
     const { settings, updateSettings } = useSettings();
-
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: '#fff',
-            paddingTop: insets.top,
-            paddingLeft: '5%',
-            paddingRight: '5%',
-        },
-        settingsContainer: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: 10,
-        },
-        settingsText: {
-            fontSize: 16,
-            fontWeight: 'bold',
-            width: '50%',
-        },
-        settingsInput: {
-            fontSize: 16,
-            fontWeight: 'bold',
-            borderWidth: 1,
-            borderColor: 'gray',
-            borderRadius: 5,
-            padding: 5,
-            width: '50%',
-            textAlign: 'right',
-        },
-    });
 
     return (
         <View style={styles.container}>
-            <Button title="Back" onPress={() => router.push('/')} />
-            <Text>Settings</Text>
             <View style={styles.settingsContainer}>
                 <Text style={styles.settingsText}>Starting Points</Text>
                 <TextInput
@@ -86,8 +50,37 @@ export default function SettingsScreen() {
                     onChangeText={text => updateSettings({ startingPoints: parseInt(text) || 0 })}
                 />
             </View>
-
-
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        paddingTop: '5%',
+        paddingLeft: '5%',
+        paddingRight: '5%',
+    },
+    settingsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: 10,
+    },
+    settingsText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        width: '50%',
+    },
+    settingsInput: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 5,
+        padding: 5,
+        width: '50%',
+        textAlign: 'right',
+    },
+});
