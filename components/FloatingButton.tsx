@@ -1,14 +1,17 @@
-import { Image, StyleSheet, TouchableOpacity, ImageSourcePropType } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, ImageSourcePropType, Text, ViewStyle } from "react-native";
 
 interface FloatingButtonProps {
+    text?: string;
     onPress: () => void;
-    imageSource: ImageSourcePropType;
+    imageSource?: ImageSourcePropType;
+    style: ViewStyle;
 }
 
-export default function FloatingButton({ onPress, imageSource }: FloatingButtonProps) {
+export default function FloatingButton({ text, onPress, imageSource, style }: FloatingButtonProps) {
     return (
-        <TouchableOpacity style={styles.buttonContainer} onPress={onPress}>
-            <Image source={imageSource} style={styles.image} />
+        <TouchableOpacity style={[styles.buttonContainer, style]} onPress={onPress}>
+            {text && <Text style={styles.text}>{text}</Text>}
+            {imageSource && <Image source={imageSource} style={styles.image} />}
         </TouchableOpacity>
     );
 }
@@ -25,8 +28,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
-        bottom: 30, // Distance from bottom - adjust this value
-        right: 30,
         borderRadius: 30,
         fontSize: 40,
         fontWeight: 'bold',

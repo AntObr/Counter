@@ -30,6 +30,10 @@ export default function App() {
             <FloatingButton
                 onPress={() => router.push('/settings')}
                 imageSource={require('../assets/settings.png')}
+                style={{
+                    bottom: 30,
+                    right: 30,
+                }}
             />
             <StatusBar style="auto" />
         </View>
