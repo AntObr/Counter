@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, ScrollView, Button } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 
 export default function App() {
     const insets = useSafeAreaInsets();
@@ -18,13 +18,11 @@ export default function App() {
     });
 
     return (
-        <>
-            <ScrollView style={styles.container}>
-                <Text>Home</Text>
-                <Button title="Settings" onPress={() => router.push('/settings')} />
-                <StatusBar style="auto" />
-            </ScrollView>
-        </>
+        <ScrollView style={styles.container}>
+            <Text>Home</Text>
+            <Button title="Settings" onPress={() => router.push('/settings')} />
+            <StatusBar style="auto" />
+        </ScrollView>
     );
 }
 
