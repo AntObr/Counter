@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { DeviceEventEmitter, StyleSheet, View } from 'react-native';
+import { DeviceEventEmitter, Dimensions, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import Counter from '../components/Counter';
@@ -15,9 +15,6 @@ export default function App() {
         container: {
             flex: 1,
             backgroundColor: '#fff',
-            // paddingTop: insets.top,
-            paddingLeft: '5%',
-            paddingRight: '5%',
             height: '100%',
             width: '100%',
         },
@@ -29,26 +26,37 @@ export default function App() {
                 showReset={settings.individualReset}
                 style={{
                     transform: [{ rotate: '180deg' }],
+                    backgroundColor: 'red',
+                    borderColor: 'red',
                 }}
             />}
-            <Counter showReset={settings.individualReset} />
+            <Counter
+                showReset={settings.individualReset}
+                style={{
+                    backgroundColor: 'blue',
+                    borderColor: 'blue',
+                }}
+            />
             <FloatingButton
                 onPress={() => router.push('/settings')}
                 imageSource={require('../assets/settings.png')}
                 style={{
                     position: 'absolute',
-                    bottom: 30,
-                    right: 30,
+                    bottom: Dimensions.get('window').height / 2,
+                    right: Dimensions.get('window').width * 0.66,
+                    transform: [{ translateX: 30 }, { translateY: 30 }],
                     zIndex: 1000,
                 }}
             />
             {!settings.individualReset && <FloatingButton
                 onPress={() => DeviceEventEmitter.emit('counterReset')}
-                text="Reset"
+                imageSource={require('../assets/reset.png')}
                 style={{
-                    bottom: '47%',
-                    right: '50%',
-                    transform: [{ translateX: 10 }],
+                    position: 'absolute',
+                    bottom: Dimensions.get('window').height / 2,
+                    right: Dimensions.get('window').width * 0.33,
+                    transform: [{ translateX: 30 }, { translateY: 30 }],
+                    zIndex: 1000,
                 }}
             />}
             <StatusBar style="auto" />

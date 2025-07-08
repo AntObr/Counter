@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
+import { Button, StyleSheet, Text, TouchableOpacity, View, ViewStyle, Dimensions } from "react-native";
 import { useSettings } from "../app/settings";
 import { useEffect, useState } from "react";
 import FloatingButton from "./FloatingButton";
@@ -51,7 +51,6 @@ export default function Counter({ showReset = false, style }: CounterProps) {
                     }}
                 />
             )}
-            {/* <Button title="Reset" onPress={() => setCount(settings.startingPoints)} /> */}
         </View >
     );
 }
@@ -63,9 +62,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
         borderColor: 'gray',
-        borderRadius: 10,
         padding: 0,
         margin: 0,
+        borderTopColor: 'black',
     },
     counterContainer: {
         flex: 1,
@@ -82,8 +81,7 @@ const styles = StyleSheet.create({
         margin: 0,
     },
     count: {
-        fontSize: 60,
-        fontWeight: 'bold',
+        fontSize: 100,
         textAlign: 'center',
         padding: 0,
         margin: 0,
