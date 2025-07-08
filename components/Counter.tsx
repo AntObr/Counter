@@ -1,14 +1,34 @@
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Button, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
 import { useSettings } from "../app/settings";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FloatingButton from "./FloatingButton";
+import { DeviceEventEmitter } from "react-native";
 
-export default function Counter() {
+interface CounterProps {
+    showReset?: boolean;
+    style?: ViewStyle;
+}
+
+export default function Counter({ showReset = false, style }: CounterProps) {
     const { settings } = useSettings();
     const [count, setCount] = useState(settings.startingPoints);
 
+    useEffect(() => {
+        const handleCounterReset = () => {
+            setCount(settings.startingPoints);
+        };
+
+        // Add event listener
+        const subscription = DeviceEventEmitter.addListener('counterReset', handleCounterReset);
+
+        // Cleanup subscription on unmount
+        return () => {
+            subscription.remove();
+        };
+    }, [settings.startingPoints]);
+
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, style]}>
             <View style={styles.counterContainer}>
                 <Text style={styles.count}>{count}</Text>
             </View>
@@ -20,15 +40,17 @@ export default function Counter() {
                     <Text style={styles.buttonText}>+</Text>
                 </TouchableOpacity>
             </View>
-            <FloatingButton
-                text="Reset"
-                onPress={() => setCount(settings.startingPoints)}
-                style={{
-                    bottom: 30,
-                    right: '50%',
-                    transform: [{ translateX: 30 }],
-                }}
-            />
+            {showReset && (
+                <FloatingButton
+                    text="Reset"
+                    onPress={() => setCount(settings.startingPoints)}
+                    style={{
+                        bottom: 30,
+                        right: '50%',
+                        transform: [{ translateX: 30 }],
+                    }}
+                />
+            )}
             {/* <Button title="Reset" onPress={() => setCount(settings.startingPoints)} /> */}
         </View >
     );
@@ -60,7 +82,7 @@ const styles = StyleSheet.create({
         margin: 0,
     },
     count: {
-        fontSize: 24,
+        fontSize: 60,
         fontWeight: 'bold',
         textAlign: 'center',
         padding: 0,

@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, TextInput, Switch } from 'react-native';
 type Settings = {
     startingPoints: number;
     onePlayer: boolean;
+    individualReset: boolean;
 };
 
 type SettingsContextType = {
@@ -17,6 +18,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     const [settings, setSettings] = useState<Settings>({
         startingPoints: 30,
         onePlayer: false,
+        individualReset: false,
     });
 
     const updateSettings = (newSettings: Partial<Settings>) => {
@@ -57,6 +59,13 @@ export default function SettingsScreen() {
                 <Switch
                     value={settings.onePlayer}
                     onValueChange={value => updateSettings({ onePlayer: value })}
+                />
+            </View>
+            <View style={styles.settingsContainer}>
+                <Text style={styles.settingsText}>Individual Reset</Text>
+                <Switch
+                    value={settings.individualReset}
+                    onValueChange={value => updateSettings({ individualReset: value })}
                 />
             </View>
         </View>
