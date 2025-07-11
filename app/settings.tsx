@@ -1,10 +1,10 @@
-import React, { createContext, useContext, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Switch } from 'react-native';
+import type React from "react";
+import { createContext, useContext, useState } from "react";
+import { StyleSheet, Switch, Text, TextInput, View } from "react-native";
 
 type Settings = {
     startingPoints: number;
     onePlayer: boolean;
-    individualReset: boolean;
 };
 
 type SettingsContextType = {
@@ -12,17 +12,18 @@ type SettingsContextType = {
     updateSettings: (newSettings: Partial<Settings>) => void;
 };
 
-const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
+const SettingsContext = createContext<SettingsContextType | undefined>(
+    undefined,
+);
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
     const [settings, setSettings] = useState<Settings>({
         startingPoints: 30,
         onePlayer: false,
-        individualReset: false,
     });
 
     const updateSettings = (newSettings: Partial<Settings>) => {
-        setSettings(prev => ({ ...prev, ...newSettings }));
+        setSettings((prev) => ({ ...prev, ...newSettings }));
     };
 
     return (
@@ -35,7 +36,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 export function useSettings() {
     const context = useContext(SettingsContext);
     if (!context) {
-        throw new Error('useSettings must be used within a SettingsProvider');
+        throw new Error("useSettings must be used within a SettingsProvider");
     }
     return context;
 }
@@ -51,21 +52,18 @@ export default function SettingsScreen() {
                     style={styles.settingsInput}
                     inputMode="numeric"
                     value={settings.startingPoints.toString()}
-                    onChangeText={text => updateSettings({ startingPoints: parseInt(text) || 0 })}
+                    onChangeText={(text) =>
+                        updateSettings({ startingPoints: parseInt(text) || 0 })
+                    }
                 />
             </View>
             <View style={styles.settingsContainer}>
                 <Text style={styles.settingsText}>One Player</Text>
                 <Switch
                     value={settings.onePlayer}
-                    onValueChange={value => updateSettings({ onePlayer: value })}
-                />
-            </View>
-            <View style={styles.settingsContainer}>
-                <Text style={styles.settingsText}>Individual Reset</Text>
-                <Switch
-                    value={settings.individualReset}
-                    onValueChange={value => updateSettings({ individualReset: value })}
+                    onValueChange={(value) =>
+                        updateSettings({ onePlayer: value })
+                    }
                 />
             </View>
         </View>
@@ -75,31 +73,31 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        paddingTop: '5%',
-        paddingLeft: '5%',
-        paddingRight: '5%',
+        backgroundColor: "#fff",
+        paddingTop: "5%",
+        paddingLeft: "5%",
+        paddingRight: "5%",
         gap: 10,
     },
     settingsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
         gap: 10,
     },
     settingsText: {
         fontSize: 16,
-        fontWeight: 'bold',
-        width: '50%',
+        fontWeight: "bold",
+        width: "50%",
     },
     settingsInput: {
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: "bold",
         borderWidth: 1,
-        borderColor: 'gray',
+        borderColor: "gray",
         borderRadius: 5,
         padding: 5,
-        width: '50%',
-        textAlign: 'right',
+        width: "50%",
+        textAlign: "right",
     },
 });
