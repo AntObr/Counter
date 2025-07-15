@@ -72,7 +72,7 @@ export default function Counter({
             setOffsetIncrement(Math.round(offset.value / 10));
         },
         handleSwipeEnd: (
-            event: GestureStateChangeEvent<PanGestureHandlerEventPayload>,
+            _event: GestureStateChangeEvent<PanGestureHandlerEventPayload>,
         ) => {
             offset.value = 0;
             setOffsetIncrement(0);
@@ -110,7 +110,7 @@ export default function Counter({
             setOffsetIncrement(-Math.round(offset.value / 10));
         },
         handleSwipeEnd: (
-            event: GestureStateChangeEvent<PanGestureHandlerEventPayload>,
+            _event: GestureStateChangeEvent<PanGestureHandlerEventPayload>,
         ) => {
             offset.value = 0;
             setOffsetIncrement(0);

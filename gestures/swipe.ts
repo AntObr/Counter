@@ -34,5 +34,5 @@ export const SwipeGesture = ({
             (event: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => {
                 runOnJS(handleSwipeEnd)(event);
             },
-        )
+        );
 };
