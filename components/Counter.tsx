@@ -1,3 +1,4 @@
+import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
 import {
     DeviceEventEmitter,
@@ -65,6 +66,9 @@ export default function Counter({
             } else {
                 offset.value = translationX;
             }
+            if (offsetIncrement !== Math.round(offset.value / 10)) {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid);
+            }
             setOffsetIncrement(Math.round(offset.value / 10));
         },
         handleSwipeEnd: (
@@ -99,6 +103,9 @@ export default function Counter({
                 offset.value = 0;
             } else {
                 offset.value = translationX;
+            }
+            if (offsetIncrement !== -Math.round(offset.value / 10)) {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid);
             }
             setOffsetIncrement(-Math.round(offset.value / 10));
         },
@@ -155,10 +162,18 @@ export default function Counter({
                 />
                 <View style={styles.buttonContainer}>
                     <View style={styles.buttonLeft}>
-                        <Text style={[styles.buttonLeftText, animatedTextStyle]}>{offsetIncrement}</Text>
+                        <Text
+                            style={[styles.buttonLeftText, animatedTextStyle]}
+                        >
+                            {offsetIncrement}
+                        </Text>
                     </View>
                     <View style={styles.buttonRight}>
-                        <Text style={[styles.buttonRightText, animatedTextStyle]}>{offsetIncrement}</Text>
+                        <Text
+                            style={[styles.buttonRightText, animatedTextStyle]}
+                        >
+                            {offsetIncrement}
+                        </Text>
                     </View>
                 </View>
             </View>
@@ -179,22 +194,41 @@ export default function Counter({
                 </View>
                 <View style={styles.buttonContainer}>
                     <GestureDetector
-                        gesture={Gesture.Exclusive(leftSwipeGesture, leftTapGesture)}
+                        gesture={Gesture.Exclusive(
+                            leftSwipeGesture,
+                            leftTapGesture,
+                        )}
                     >
                         <View style={styles.buttonLeft}>
-                            <Animated.Text style={[styles.buttonLeftText, animatedTextStyle]}>-</Animated.Text>
+                            <Animated.Text
+                                style={[
+                                    styles.buttonLeftText,
+                                    animatedTextStyle,
+                                ]}
+                            >
+                                -
+                            </Animated.Text>
                         </View>
                     </GestureDetector>
                     <GestureDetector
-                        gesture={Gesture.Exclusive(rightSwipeGesture, rightTapGesture)}
+                        gesture={Gesture.Exclusive(
+                            rightSwipeGesture,
+                            rightTapGesture,
+                        )}
                     >
                         <View style={styles.buttonRight}>
-                            <Animated.Text style={[styles.buttonRightText, animatedTextStyle]}>+</Animated.Text>
+                            <Animated.Text
+                                style={[
+                                    styles.buttonRightText,
+                                    animatedTextStyle,
+                                ]}
+                            >
+                                +
+                            </Animated.Text>
                         </View>
                     </GestureDetector>
                 </View>
             </Animated.View>
-            
         </View>
     );
 }
@@ -271,7 +305,7 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         padding: 0,
         paddingLeft: 20,
-        margin: 0
+        margin: 0,
     },
     buttonRight: {
         flex: 1,
@@ -294,5 +328,4 @@ const styles = StyleSheet.create({
         padding: 0,
         margin: 0,
     },
-
 });
