@@ -35,5 +35,4 @@ export const SwipeGesture = ({
                 runOnJS(handleSwipeEnd)(event);
             },
         )
-        .delay(100)
 };

@@ -158,14 +158,14 @@ export default function Counter({
                 </View>
                 <View style={styles.buttonContainer}>
                     <GestureDetector
-                        gesture={Gesture.Exclusive(leftTapGesture, leftSwipeGesture)}
+                        gesture={Gesture.Exclusive(leftSwipeGesture, leftTapGesture)}
                     >
                         <View style={styles.buttonLeft}>
                             <Animated.Text style={[styles.buttonLeftText, animatedTextStyle]}>-</Animated.Text>
                         </View>
                     </GestureDetector>
                     <GestureDetector
-                        gesture={Gesture.Exclusive(rightTapGesture, rightSwipeGesture)}
+                        gesture={Gesture.Exclusive(rightSwipeGesture, rightTapGesture)}
                     >
                         <View style={styles.buttonRight}>
                             <Animated.Text style={[styles.buttonRightText, animatedTextStyle]}>+</Animated.Text>
