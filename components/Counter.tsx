@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react";
 import {
     DeviceEventEmitter,
-    GestureResponderEvent,
-    Pressable,
     StyleSheet,
     Text,
     View,
     type ViewStyle,
 } from "react-native";
+import {
+    Gesture,
+    GestureDetector,
+    type GestureStateChangeEvent,
+    type GestureUpdateEvent,
+    type PanGestureHandlerEventPayload,
+} from "react-native-gesture-handler";
+import Animated, {
+    useAnimatedStyle,
+    useSharedValue,
+} from "react-native-reanimated";
 import { useSettings } from "../app/settings";
+import { SwipeGesture, TapGesture } from "../gestures";
 import BackgroundGradient from "./BackgroundGradient";
-// import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
-
 
 interface CounterProps {
     style?: ViewStyle;
@@ -28,8 +35,8 @@ export default function Counter({
     const { settings } = useSettings();
     const [count, setCount] = useState(settings.startingPoints);
     const offset = useSharedValue(0);
-    const isPressed = useSharedValue(false);
-    const pressPosition = useSharedValue({ x: 0, y: 0 });
+    const [offsetIncrement, setOffsetIncrement] = useState(0);
+    const [isSwiping, setIsSwiping] = useState(false);
 
     const animatedStyle = useAnimatedStyle(() => {
         return {
@@ -37,15 +44,81 @@ export default function Counter({
         };
     });
 
-    const incrementCount = (amount: number) => {
-        if (!isPressed.value) {
-            setCount(count + amount);
-        }
-    };
+    const animatedTextStyle = useAnimatedStyle(() => {
+        return {
+            fontSize: 60 + Math.abs(offset.value / 8),
+        };
+    });
 
-    const onPressIn = (event: GestureResponderEvent) => {
-        pressPosition.value = { x: event.nativeEvent.locationX, y: event.nativeEvent.locationY };
-    };
+    const leftSwipeGesture = SwipeGesture({
+        handleSwipeBegin: () => {
+            setIsSwiping(true);
+        },
+        handleSwipeChange: (
+            event: GestureUpdateEvent<PanGestureHandlerEventPayload>,
+        ) => {
+            const translationX = flip
+                ? -Math.round(event.translationX)
+                : Math.round(event.translationX);
+            if (translationX < 0) {
+                offset.value = 0;
+            } else {
+                offset.value = translationX;
+            }
+            setOffsetIncrement(-Math.round(offset.value / 10));
+        },
+        handleSwipeEnd: (
+            event: GestureStateChangeEvent<PanGestureHandlerEventPayload>,
+        ) => {
+            offset.value = 0;
+            setOffsetIncrement(0);
+            setCount(count + offsetIncrement);
+            setIsSwiping(false);
+        },
+    });
+
+    const leftTapGesture = TapGesture({
+        handleTapBegin: () => {
+            if (isSwiping) {
+                setCount(count + 1);
+            }
+        },
+    });
+
+    const rightSwipeGesture = SwipeGesture({
+        handleSwipeBegin: () => {
+            setIsSwiping(true);
+        },
+        handleSwipeChange: (
+            event: GestureUpdateEvent<PanGestureHandlerEventPayload>,
+        ) => {
+            const translationX = flip
+                ? -Math.round(event.translationX)
+                : Math.round(event.translationX);
+            if (translationX > 0) {
+                offset.value = 0;
+            } else {
+                offset.value = translationX;
+            }
+            setOffsetIncrement(-Math.round(offset.value / 10));
+        },
+        handleSwipeEnd: (
+            event: GestureStateChangeEvent<PanGestureHandlerEventPayload>,
+        ) => {
+            offset.value = 0;
+            setOffsetIncrement(0);
+            setCount(count + offsetIncrement);
+            setIsSwiping(false);
+        },
+    });
+
+    const rightTapGesture = TapGesture({
+        handleTapBegin: () => {
+            if (isSwiping) {
+                setCount(count + 1);
+            }
+        },
+    });
 
     useEffect(() => {
         const handleCounterReset = () => {
@@ -75,7 +148,6 @@ export default function Counter({
                 { transform: [{ rotate: flip ? "180deg" : "0deg" }] },
             ]}
         >
-            {/* <GestureDetector gesture={gesture}> */}
             <Animated.View style={[styles.topContainer, animatedStyle]}>
                 <BackgroundGradient
                     colors={player === 1 ? p1_colors : p2_colors}
@@ -85,26 +157,25 @@ export default function Counter({
                     <Text style={styles.count}>{count}</Text>
                 </View>
                 <View style={styles.buttonContainer}>
-                    {/* https://reactnative.dev/docs/gesture-responder-system */}
-                    <Pressable
-                        style={styles.buttonLeft}
-                        onPress={() => incrementCount(-1)}
-                        onLongPress={() => console.log("onLongPress")}
-                        delayLongPress={200}
+                    <GestureDetector
+                        gesture={Gesture.Exclusive(leftTapGesture, leftSwipeGesture)}
                     >
-                        <Text style={styles.buttonText}>-</Text>
-                    </Pressable>
-                    <Pressable
-                        style={styles.buttonRight}
-                        onPress={() => incrementCount(1)}
-                        onLongPress={() => console.log("onLongPress")}
-                        delayLongPress={200}
+                        <View style={styles.buttonLeft}>
+                            <Animated.Text style={[styles.buttonLeftText, animatedTextStyle]}>-</Animated.Text>
+                        </View>
+                    </GestureDetector>
+                    <GestureDetector
+                        gesture={Gesture.Exclusive(rightTapGesture, rightSwipeGesture)}
                     >
-                        <Text style={styles.buttonText}>+</Text>
-                    </Pressable>
+                        <View style={styles.buttonRight}>
+                            <Animated.Text style={[styles.buttonRightText, animatedTextStyle]}>+</Animated.Text>
+                        </View>
+                    </GestureDetector>
                 </View>
             </Animated.View>
-            {/* </GestureDetector> */}
+            <View style={styles.floatingContainer}>
+                <Text style={styles.floatingText}>{offsetIncrement}</Text>
+            </View>
         </View>
     );
 }
@@ -154,7 +225,13 @@ const styles = StyleSheet.create({
         padding: 0,
         margin: 0,
     },
-    buttonText: {
+    buttonLeftText: {
+        fontSize: 60,
+        textAlign: "center",
+        padding: 0,
+        margin: 0,
+    },
+    buttonRightText: {
         fontSize: 60,
         textAlign: "center",
         padding: 0,
@@ -166,7 +243,7 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         padding: 0,
         paddingLeft: 20,
-        margin: 0,
+        margin: 0
     },
     buttonRight: {
         flex: 1,
@@ -174,6 +251,19 @@ const styles = StyleSheet.create({
         alignItems: "flex-end",
         padding: 0,
         paddingRight: 20,
+        margin: 0,
+    },
+    floatingContainer: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+    floatingText: {
+        fontSize: 100,
+        textAlign: "center",
+        padding: 0,
         margin: 0,
     },
 });
