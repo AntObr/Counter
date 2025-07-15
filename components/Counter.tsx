@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import {
     DeviceEventEmitter,
+    GestureResponderEvent,
+    Pressable,
     StyleSheet,
     Text,
-    TouchableOpacity,
     View,
     type ViewStyle,
 } from "react-native";
 import { useSettings } from "../app/settings";
 import BackgroundGradient from "./BackgroundGradient";
+// import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
+
 
 interface CounterProps {
     style?: ViewStyle;
@@ -23,6 +27,25 @@ export default function Counter({
 }: CounterProps) {
     const { settings } = useSettings();
     const [count, setCount] = useState(settings.startingPoints);
+    const offset = useSharedValue(0);
+    const isPressed = useSharedValue(false);
+    const pressPosition = useSharedValue({ x: 0, y: 0 });
+
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            left: offset.value,
+        };
+    });
+
+    const incrementCount = (amount: number) => {
+        if (!isPressed.value) {
+            setCount(count + amount);
+        }
+    };
+
+    const onPressIn = (event: GestureResponderEvent) => {
+        pressPosition.value = { x: event.nativeEvent.locationX, y: event.nativeEvent.locationY };
+    };
 
     useEffect(() => {
         const handleCounterReset = () => {
@@ -52,27 +75,36 @@ export default function Counter({
                 { transform: [{ rotate: flip ? "180deg" : "0deg" }] },
             ]}
         >
-            <BackgroundGradient
-                colors={player === 1 ? p1_colors : p2_colors}
-                locations={[0, 0.66, 1]}
-            />
-            <View style={styles.counterContainer}>
-                <Text style={styles.count}>{count}</Text>
-            </View>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                    style={styles.buttonLeft}
-                    onPress={() => setCount(count - 1)}
-                >
-                    <Text style={styles.buttonText}>-</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.buttonRight}
-                    onPress={() => setCount(count + 1)}
-                >
-                    <Text style={styles.buttonText}>+</Text>
-                </TouchableOpacity>
-            </View>
+            {/* <GestureDetector gesture={gesture}> */}
+            <Animated.View style={[styles.topContainer, animatedStyle]}>
+                <BackgroundGradient
+                    colors={player === 1 ? p1_colors : p2_colors}
+                    locations={[0, 0.66, 1]}
+                />
+                <View style={styles.counterContainer}>
+                    <Text style={styles.count}>{count}</Text>
+                </View>
+                <View style={styles.buttonContainer}>
+                    {/* https://reactnative.dev/docs/gesture-responder-system */}
+                    <Pressable
+                        style={styles.buttonLeft}
+                        onPress={() => incrementCount(-1)}
+                        onLongPress={() => console.log("onLongPress")}
+                        delayLongPress={200}
+                    >
+                        <Text style={styles.buttonText}>-</Text>
+                    </Pressable>
+                    <Pressable
+                        style={styles.buttonRight}
+                        onPress={() => incrementCount(1)}
+                        onLongPress={() => console.log("onLongPress")}
+                        delayLongPress={200}
+                    >
+                        <Text style={styles.buttonText}>+</Text>
+                    </Pressable>
+                </View>
+            </Animated.View>
+            {/* </GestureDetector> */}
         </View>
     );
 }
@@ -84,6 +116,16 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 0,
         margin: 0,
+        backgroundColor: "red",
+    },
+    topContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        backgroundColor: "transparent",
     },
     counterContainer: {
         flex: 1,
