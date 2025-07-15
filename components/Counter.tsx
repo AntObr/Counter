@@ -65,14 +65,14 @@ export default function Counter({
             } else {
                 offset.value = translationX;
             }
-            setOffsetIncrement(-Math.round(offset.value / 10));
+            setOffsetIncrement(Math.round(offset.value / 10));
         },
         handleSwipeEnd: (
             event: GestureStateChangeEvent<PanGestureHandlerEventPayload>,
         ) => {
             offset.value = 0;
             setOffsetIncrement(0);
-            setCount(count + offsetIncrement);
+            setCount(count - offsetIncrement);
             setIsSwiping(false);
         },
     });
@@ -148,10 +148,31 @@ export default function Counter({
                 { transform: [{ rotate: flip ? "180deg" : "0deg" }] },
             ]}
         >
+            <View style={styles.bottomContainer}>
+                <BackgroundGradient
+                    colors={player === 1 ? p1_colors : p2_colors}
+                    locations={[0, 0.66, 1]}
+                />
+                <View style={styles.buttonContainer}>
+                    <View style={styles.buttonLeft}>
+                        <Text style={[styles.buttonLeftText, animatedTextStyle]}>{offsetIncrement}</Text>
+                    </View>
+                    <View style={styles.buttonRight}>
+                        <Text style={[styles.buttonRightText, animatedTextStyle]}>{offsetIncrement}</Text>
+                    </View>
+                </View>
+            </View>
             <Animated.View style={[styles.topContainer, animatedStyle]}>
                 <BackgroundGradient
                     colors={player === 1 ? p1_colors : p2_colors}
                     locations={[0, 0.66, 1]}
+                    style={{
+                        left: -1,
+                        right: -1,
+                        borderLeftWidth: 1,
+                        borderRightWidth: 1,
+                        borderColor: "white",
+                    }}
                 />
                 <View style={styles.counterContainer}>
                     <Text style={styles.count}>{count}</Text>
@@ -173,9 +194,7 @@ export default function Counter({
                     </GestureDetector>
                 </View>
             </Animated.View>
-            <View style={styles.floatingContainer}>
-                <Text style={styles.floatingText}>{offsetIncrement}</Text>
-            </View>
+            
         </View>
     );
 }
@@ -190,6 +209,15 @@ const styles = StyleSheet.create({
         backgroundColor: "red",
     },
     topContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        backgroundColor: "transparent",
+    },
+    bottomContainer: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
@@ -266,4 +294,5 @@ const styles = StyleSheet.create({
         padding: 0,
         margin: 0,
     },
+
 });

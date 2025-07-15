@@ -1,16 +1,23 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { type ColorValue, StyleSheet } from "react-native";
+import {
+    type ColorValue,
+    type StyleProp,
+    StyleSheet,
+    type ViewStyle,
+} from "react-native";
 
 interface BackgroundGradientProps {
     colors: readonly [ColorValue, ColorValue, ...ColorValue[]];
     locations: readonly [number, number, ...number[]];
     flip?: boolean;
+    style?: StyleProp<ViewStyle>;
 }
 
 export default function BackgroundGradient({
     colors,
     locations,
     flip = false,
+    style,
 }: BackgroundGradientProps) {
     return (
         <LinearGradient
@@ -19,6 +26,7 @@ export default function BackgroundGradient({
             style={[
                 styles.gradient,
                 { transform: [{ rotate: flip ? "180deg" : "0deg" }] },
+                style,
             ]}
         />
     );
