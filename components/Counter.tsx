@@ -2,13 +2,13 @@ import * as Haptics from "expo-haptics";
 import { useEffect, useState } from "react";
 import {
     DeviceEventEmitter,
+    Image,
     StyleSheet,
     Text,
     View,
     type ViewStyle,
 } from "react-native";
 import {
-    Gesture,
     GestureDetector,
     type GestureStateChangeEvent,
     type GestureUpdateEvent,
@@ -83,7 +83,7 @@ export default function Counter({
 
     const leftTapGesture = TapGesture({
         handleTapBegin: () => {
-            if (isSwiping) {
+            if (!isSwiping) {
                 setCount(count + 1);
             }
         },
@@ -121,7 +121,7 @@ export default function Counter({
 
     const rightTapGesture = TapGesture({
         handleTapBegin: () => {
-            if (isSwiping) {
+            if (!isSwiping) {
                 setCount(count + 1);
             }
         },
@@ -160,17 +160,17 @@ export default function Counter({
                     colors={player === 1 ? p1_colors : p2_colors}
                     locations={[0, 0.66, 1]}
                 />
-                <View style={styles.buttonContainer}>
-                    <View style={styles.buttonLeft}>
+                <View style={styles.offsetContainer}>
+                    <View style={styles.offsetLeft}>
                         <Text
-                            style={[styles.buttonLeftText, animatedTextStyle]}
+                            style={styles.offsetLeftText}
                         >
                             {offsetIncrement}
                         </Text>
                     </View>
-                    <View style={styles.buttonRight}>
+                    <View style={styles.offsetRight}>
                         <Text
-                            style={[styles.buttonRightText, animatedTextStyle]}
+                            style={styles.offsetRightText}
                         >
                             {offsetIncrement}
                         </Text>
@@ -193,13 +193,8 @@ export default function Counter({
                     <Text style={styles.count}>{count}</Text>
                 </View>
                 <View style={styles.buttonContainer}>
-                    <GestureDetector
-                        gesture={Gesture.Exclusive(
-                            leftSwipeGesture,
-                            leftTapGesture,
-                        )}
-                    >
-                        <View style={styles.buttonLeft}>
+                    <GestureDetector gesture={leftTapGesture}>
+                        <View style={[styles.buttonLeft, styles.button]}>
                             <Animated.Text
                                 style={[
                                     styles.buttonLeftText,
@@ -210,13 +205,8 @@ export default function Counter({
                             </Animated.Text>
                         </View>
                     </GestureDetector>
-                    <GestureDetector
-                        gesture={Gesture.Exclusive(
-                            rightSwipeGesture,
-                            rightTapGesture,
-                        )}
-                    >
-                        <View style={styles.buttonRight}>
+                    <GestureDetector gesture={rightTapGesture}>
+                        <View style={[styles.buttonRight, styles.button]}>
                             <Animated.Text
                                 style={[
                                     styles.buttonRightText,
@@ -225,6 +215,22 @@ export default function Counter({
                             >
                                 +
                             </Animated.Text>
+                        </View>
+                    </GestureDetector>
+                    <GestureDetector gesture={leftSwipeGesture}>
+                        <View style={[styles.slider]}>
+                            <Image
+                                source={require("../assets/icons/right_pointing_arrow.png")}
+                                style={styles.sliderImage}
+                            />
+                        </View>
+                    </GestureDetector>
+                    <GestureDetector gesture={rightSwipeGesture}>
+                        <View style={[styles.slider]}>
+                            <Image
+                                source={require("../assets/icons/left_pointing_arrow.png")}
+                                style={styles.sliderImage}
+                            />
                         </View>
                     </GestureDetector>
                 </View>
@@ -277,14 +283,68 @@ const styles = StyleSheet.create({
     count: {
         fontSize: 100,
         textAlign: "center",
-        padding: 0,
+        paddingBottom: "10%",
         margin: 0,
     },
+    
     buttonContainer: {
         flexDirection: "row",
+        flexWrap: "wrap",
         height: "100%",
         width: "100%",
         padding: 0,
+        margin: 0,
+    },
+    button: {
+        width: "50%",
+        height: "70%",
+        paddingTop: "20%",
+    },
+    slider: {
+        width: "50%",
+        height: "30%",
+        justifyContent: "center",
+        alignItems: "center",
+        // borderTopWidth: 1,
+        paddingBottom: "15%",
+    },
+    sliderImage: {
+        width: 100,
+        resizeMode: "contain",
+    },
+    offsetContainer: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        height: "100%",
+        width: "100%",
+        padding: 0,
+        margin: 0,
+        paddingBottom: "10%",
+    },
+    offsetLeft: {
+        width: "50%",
+        height: "100%",
+        padding: 0,
+        margin: 0,
+        justifyContent: "center",
+    },
+    offsetRight: {
+        width: "50%",
+        height: "100%",
+        padding: 0,
+        margin: 0,
+        justifyContent: "center",
+    },
+    offsetLeftText: {
+        fontSize: 60,
+        textAlign: "left",
+        paddingLeft: 10,
+        margin: 0,
+    },
+    offsetRightText: {
+        fontSize: 60,
+        textAlign: "right",
+        paddingRight: 10,
         margin: 0,
     },
     buttonLeftText: {
@@ -300,7 +360,7 @@ const styles = StyleSheet.create({
         margin: 0,
     },
     buttonLeft: {
-        flex: 1,
+        // flex: 1,
         justifyContent: "center",
         alignItems: "flex-start",
         padding: 0,
@@ -308,7 +368,7 @@ const styles = StyleSheet.create({
         margin: 0,
     },
     buttonRight: {
-        flex: 1,
+        // flex: 1,
         justifyContent: "center",
         alignItems: "flex-end",
         padding: 0,

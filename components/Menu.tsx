@@ -40,18 +40,9 @@ const styles = StyleSheet.create({
         backgroundColor: "transparent",
         borderRadius: 1000000,
         padding: 10,
-        // elevation: 5, // Android shadow
-        // shadowColor: '#000', // iOS shadow
-        // shadowOffset: {
-        //     width: 0,
-        //     height: 2,
-        // },
-        // shadowOpacity: 0.25,
-        // shadowRadius: 3.84,
         borderColor: "black",
         borderWidth: 2,
         zIndex: 1000,
-        transform: [{ rotate: "80deg" }],
     },
     image: {
         height: "100%",
@@ -88,11 +79,11 @@ export default function Menu() {
         >
             <MenuItem
                 onPress={() => DeviceEventEmitter.emit("counterReset")}
-                imageSource={require("../assets/reset.png")}
+                imageSource={require("../assets/icons/reset.png")}
             />
             <MenuItem
                 onPress={() => router.push("/settings")}
-                imageSource={require("../assets/settings.png")}
+                imageSource={require("../assets/icons/settings.png")}
             />
             {!settings.onePlayer && <HorizontalLine />}
         </View>
