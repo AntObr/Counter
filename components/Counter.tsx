@@ -86,6 +86,7 @@ export default function Counter({
         handleTapBegin: () => {
             if (!isSwiping) {
                 setCount(count - 1);
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             }
         },
     });
@@ -124,6 +125,7 @@ export default function Counter({
         handleTapBegin: () => {
             if (!isSwiping) {
                 setCount(count + 1);
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
             }
         },
     });
@@ -159,7 +161,13 @@ export default function Counter({
             <SliderDisplay
                 colors={player === 1 ? p1_colors : p2_colors}
                 displayValue={offsetIncrement}
-                style={{ paddingBottom: "10%" }}
+                style={{
+                    paddingBottom: "10%",
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                }}
             />
             <Animated.View style={[styles.topContainer, animatedStyle]}>
                 <BackgroundGradient
