@@ -21,6 +21,7 @@ import Animated, {
 import { useSettings } from "../app/settings";
 import { SwipeGesture, TapGesture } from "../gestures";
 import BackgroundGradient from "./BackgroundGradient";
+import SliderDisplay from "./SliderDisplay";
 
 interface CounterProps {
     style?: ViewStyle;
@@ -84,7 +85,7 @@ export default function Counter({
     const leftTapGesture = TapGesture({
         handleTapBegin: () => {
             if (!isSwiping) {
-                setCount(count + 1);
+                setCount(count - 1);
             }
         },
     });
@@ -155,28 +156,11 @@ export default function Counter({
                 { transform: [{ rotate: flip ? "180deg" : "0deg" }] },
             ]}
         >
-            <View style={styles.bottomContainer}>
-                <BackgroundGradient
-                    colors={player === 1 ? p1_colors : p2_colors}
-                    locations={[0, 0.66, 1]}
-                />
-                <View style={styles.offsetContainer}>
-                    <View style={styles.offsetLeft}>
-                        <Text
-                            style={styles.offsetLeftText}
-                        >
-                            {offsetIncrement}
-                        </Text>
-                    </View>
-                    <View style={styles.offsetRight}>
-                        <Text
-                            style={styles.offsetRightText}
-                        >
-                            {offsetIncrement}
-                        </Text>
-                    </View>
-                </View>
-            </View>
+            <SliderDisplay
+                colors={player === 1 ? p1_colors : p2_colors}
+                displayValue={offsetIncrement}
+                style={{ paddingBottom: "10%" }}
+            />
             <Animated.View style={[styles.topContainer, animatedStyle]}>
                 <BackgroundGradient
                     colors={player === 1 ? p1_colors : p2_colors}
@@ -257,15 +241,6 @@ const styles = StyleSheet.create({
         height: "100%",
         backgroundColor: "transparent",
     },
-    bottomContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        position: "absolute",
-        width: "100%",
-        height: "100%",
-        backgroundColor: "transparent",
-    },
     counterContainer: {
         flex: 1,
         justifyContent: "center",
@@ -286,7 +261,6 @@ const styles = StyleSheet.create({
         paddingBottom: "10%",
         margin: 0,
     },
-    
     buttonContainer: {
         flexDirection: "row",
         flexWrap: "wrap",
@@ -311,41 +285,6 @@ const styles = StyleSheet.create({
     sliderImage: {
         width: 100,
         resizeMode: "contain",
-    },
-    offsetContainer: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        height: "100%",
-        width: "100%",
-        padding: 0,
-        margin: 0,
-        paddingBottom: "10%",
-    },
-    offsetLeft: {
-        width: "50%",
-        height: "100%",
-        padding: 0,
-        margin: 0,
-        justifyContent: "center",
-    },
-    offsetRight: {
-        width: "50%",
-        height: "100%",
-        padding: 0,
-        margin: 0,
-        justifyContent: "center",
-    },
-    offsetLeftText: {
-        fontSize: 60,
-        textAlign: "left",
-        paddingLeft: 10,
-        margin: 0,
-    },
-    offsetRightText: {
-        fontSize: 60,
-        textAlign: "right",
-        paddingRight: 10,
-        margin: 0,
     },
     buttonLeftText: {
         fontSize: 60,
@@ -373,19 +312,6 @@ const styles = StyleSheet.create({
         alignItems: "flex-end",
         padding: 0,
         paddingRight: 20,
-        margin: 0,
-    },
-    floatingContainer: {
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-    },
-    floatingText: {
-        fontSize: 100,
-        textAlign: "center",
-        padding: 0,
         margin: 0,
     },
 });
