@@ -3,13 +3,17 @@ import {
     type ImageSourcePropType,
     StyleSheet,
     View,
+    type ViewStyle,
 } from "react-native";
-import { GestureDetector } from "react-native-gesture-handler";
+import {
+    GestureDetector,
+    type GestureType,
+} from "react-native-gesture-handler";
 
 interface SlideInputProps {
-    gesture: any;
+    gesture: GestureType;
     imageSource: ImageSourcePropType;
-    style?: any;
+    style?: ViewStyle;
 }
 
 export default function SlideInput({

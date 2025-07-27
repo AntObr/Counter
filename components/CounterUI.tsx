@@ -1,54 +1,53 @@
 import * as Haptics from "expo-haptics";
-import {
-    type StyleProp,
-    StyleSheet,
-    Text,
-    type TextStyle,
-    View,
-    type ViewStyle,
-} from "react-native";
+import { useState } from "react";
+import { StyleSheet, Text, View, type ViewStyle } from "react-native";
 import {
     GestureDetector,
     type GestureStateChangeEvent,
     type GestureUpdateEvent,
     type PanGestureHandlerEventPayload,
 } from "react-native-gesture-handler";
-import Animated, { type SharedValue } from "react-native-reanimated";
+import Animated, {
+    useAnimatedStyle,
+    useSharedValue,
+} from "react-native-reanimated";
 import { SwipeGesture, TapGesture } from "../gestures";
 import BackgroundGradient from "./BackgroundGradient";
 import SlideInput from "./SlideInput";
 
 interface CounterUIProps {
     count: number;
-    animatedStyle: StyleProp<ViewStyle>;
-    animatedTextStyle: StyleProp<TextStyle>;
+    setCount: (value: number | ((prev: number) => number)) => void;
     offsetIncrement: number;
     setOffsetIncrement: (value: number) => void;
-    setCount: (value: number | ((prev: number) => number)) => void;
-    offset: SharedValue<number>;
     flip: boolean;
-    isSwiping: boolean;
-    setIsSwiping: (value: boolean) => void;
-    player: number;
     style?: ViewStyle;
+    colors: readonly [string, string, ...string[]];
 }
 
 export default function CounterUI({
     count,
-    animatedStyle,
-    animatedTextStyle,
+    setCount,
     offsetIncrement,
     setOffsetIncrement,
-    setCount,
-    offset,
     flip,
-    isSwiping,
-    setIsSwiping,
-    player,
     style,
+    colors,
 }: CounterUIProps) {
-    const p1_colors = ["#A2264B", "#D3212D", "#F62D2D"] as const;
-    const p2_colors = ["#A2264B", "#722B6A", "#412F88"] as const;
+    const offset = useSharedValue(0);
+    const [isSwiping, setIsSwiping] = useState(false);
+
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            left: offset.value,
+        };
+    });
+
+    const animatedTextStyle = useAnimatedStyle(() => {
+        return {
+            fontSize: 60 + Math.abs(offset.value / 8),
+        };
+    });
 
     const leftSwipeGesture = SwipeGesture({
         handleSwipeBegin: () => {
@@ -133,7 +132,7 @@ export default function CounterUI({
     return (
         <Animated.View style={[styles.topContainer, animatedStyle, style]}>
             <BackgroundGradient
-                colors={player === 1 ? p1_colors : p2_colors}
+                colors={colors}
                 locations={[0, 0.66, 1]}
                 style={{
                     left: -1,

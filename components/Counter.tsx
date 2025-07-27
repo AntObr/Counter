@@ -5,10 +5,6 @@ import {
     View,
     type ViewStyle,
 } from "react-native";
-import {
-    useAnimatedStyle,
-    useSharedValue,
-} from "react-native-reanimated";
 import { useSettings } from "../app/settings";
 import CounterUI from "./CounterUI";
 import SliderDisplay from "./SliderDisplay";
@@ -26,21 +22,7 @@ export default function Counter({
 }: CounterProps) {
     const { settings } = useSettings();
     const [count, setCount] = useState(settings.startingPoints);
-    const offset = useSharedValue(0);
     const [offsetIncrement, setOffsetIncrement] = useState(0);
-    const [isSwiping, setIsSwiping] = useState(false);
-
-    const animatedStyle = useAnimatedStyle(() => {
-        return {
-            left: offset.value,
-        };
-    });
-
-    const animatedTextStyle = useAnimatedStyle(() => {
-        return {
-            fontSize: 60 + Math.abs(offset.value / 8),
-        };
-    });
 
     useEffect(() => {
         const handleCounterReset = () => {
@@ -83,16 +65,11 @@ export default function Counter({
             />
             <CounterUI
                 count={count}
-                animatedStyle={animatedStyle}
-                animatedTextStyle={animatedTextStyle}
+                setCount={setCount}
                 offsetIncrement={offsetIncrement}
                 setOffsetIncrement={setOffsetIncrement}
-                setCount={setCount}
-                offset={offset}
                 flip={flip}
-                isSwiping={isSwiping}
-                setIsSwiping={setIsSwiping}
-                player={player}
+                colors={player === 1 ? p1_colors : p2_colors}
             />
         </View>
     );
