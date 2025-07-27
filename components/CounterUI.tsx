@@ -1,6 +1,5 @@
 import * as Haptics from "expo-haptics";
 import {
-    Image,
     type StyleProp,
     StyleSheet,
     Text,
@@ -17,6 +16,7 @@ import {
 import Animated, { type SharedValue } from "react-native-reanimated";
 import { SwipeGesture, TapGesture } from "../gestures";
 import BackgroundGradient from "./BackgroundGradient";
+import SlideInput from "./SlideInput";
 
 interface CounterUIProps {
     count: number;
@@ -165,22 +165,14 @@ export default function CounterUI({
                         </Animated.Text>
                     </View>
                 </GestureDetector>
-                <GestureDetector gesture={leftSwipeGesture}>
-                    <View style={[styles.slider]}>
-                        <Image
-                            source={require("../assets/icons/right_pointing_arrow.png")}
-                            style={styles.sliderImage}
-                        />
-                    </View>
-                </GestureDetector>
-                <GestureDetector gesture={rightSwipeGesture}>
-                    <View style={[styles.slider]}>
-                        <Image
-                            source={require("../assets/icons/left_pointing_arrow.png")}
-                            style={styles.sliderImage}
-                        />
-                    </View>
-                </GestureDetector>
+                <SlideInput
+                    gesture={leftSwipeGesture}
+                    imageSource={require("../assets/icons/right_pointing_arrow.png")}
+                />
+                <SlideInput
+                    gesture={rightSwipeGesture}
+                    imageSource={require("../assets/icons/left_pointing_arrow.png")}
+                />
             </View>
         </Animated.View>
     );
@@ -228,17 +220,6 @@ const styles = StyleSheet.create({
         width: "50%",
         height: "70%",
         paddingTop: "20%",
-    },
-    slider: {
-        width: "50%",
-        height: "30%",
-        justifyContent: "center",
-        alignItems: "center",
-        paddingBottom: "15%",
-    },
-    sliderImage: {
-        width: 100,
-        resizeMode: "contain",
     },
     buttonLeftText: {
         fontSize: 60,
